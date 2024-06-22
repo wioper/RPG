@@ -10,11 +10,11 @@ public class Photographer : MonoBehaviour
     public float Pitch { get; private set; }
     public float Yaw { get; private set; }
 
-    public float mouseSensitivity = 5;
+    public float mouseSensitivity;
 
-    public float cameraRotationSpeed = 80;
+    public float cameraRotationSpeed;
 
-    public float cameraYSpeed = 5;
+    public float cameraYSpeed;
 
     private Transform _target;
     private Transform _camera;
@@ -26,16 +26,10 @@ public class Photographer : MonoBehaviour
         _camera = transform.GetChild(0);
     }
 
-    void Start()
-    {
-        
-    }
-
     public void InitCamera(Transform target) {
         _target = target;
         transform.position = target.position;
     }
-    // Update is called once per frame
     void Update()
     {
         UpdateRotation();
@@ -52,7 +46,7 @@ public class Photographer : MonoBehaviour
         Yaw += Input.GetAxis("Camera Rate X") * cameraRotationSpeed;
         Pitch += Input.GetAxis("Mouse Y") * mouseSensitivity;
         Pitch += Input.GetAxis("Camera Rate Y") * cameraRotationSpeed;
-        Pitch = Mathf.Clamp(Pitch, -60, 90);
+        Pitch = Mathf.Clamp(Pitch, -50,60);
         
         
         transform.rotation = Quaternion.Euler(Pitch, Yaw, 0);
