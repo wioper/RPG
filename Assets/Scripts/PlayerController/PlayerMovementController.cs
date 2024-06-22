@@ -19,12 +19,14 @@ public class PlayerMovementController : MonoBehaviour
 
     private void FixedUpdate() {
         if (CurrentInput!=Vector3.zero) {
-            _rigidbody.MovePosition(_rigidbody.position + CurrentInput * MaxWalkSpeed*Time.fixedDeltaTime);
-            _animator.SetBool("walk",true);
+            if (InputManager.MainInstance.Run) {
+                _rigidbody.MovePosition(_rigidbody.position + CurrentInput * MaxRunSpeed*Time.fixedDeltaTime);
+            }
+            else {
+                _rigidbody.MovePosition(_rigidbody.position + CurrentInput * MaxWalkSpeed*Time.fixedDeltaTime);
+            }
         }
-        else {
-            _animator.SetBool("walk",false);
-        }
+        SetAnimation();
     }
 
     public void SetMovementInput(Vector3 input) {
@@ -33,5 +35,10 @@ public class PlayerMovementController : MonoBehaviour
     
     public void SetRotationInput(Quaternion input) {
         _rigidbody.MoveRotation(input);
+    }
+
+    public void SetAnimation() {
+        _animator.SetBool("walk",InputManager.MainInstance.Move);
+        _animator.SetBool("run",InputManager.MainInstance.Run);
     }
 }
