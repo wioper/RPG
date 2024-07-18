@@ -17,6 +17,11 @@ namespace GenShinImpactMovementSystem
             }
             CapsuleColliderData = new CapsuleColliderData();
             CapsuleColliderData.Initialize(gameObject);
+            OnInitialize();
+        }
+
+        protected virtual void OnInitialize() {
+            
         }
         
         

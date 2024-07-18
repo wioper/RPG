@@ -92,7 +92,8 @@ namespace GenShinImpactMovementSystem
             BoxCollider groundCheckGround = stateMachine.Player.ColliderUtility.TriggerColliderData.GroundCheckCollider;
             Vector3 groundColliderCenterInWordSpace = groundCheckGround.bounds.center;
             Collider[] overlappedGroundColliders = Physics.OverlapBox(groundColliderCenterInWordSpace,
-                groundCheckGround.bounds.extents, groundCheckGround.transform.rotation,
+                stateMachine.Player.ColliderUtility.TriggerColliderData.GroundCheckColliderExtents,
+                groundCheckGround.transform.rotation,
                 stateMachine.Player.LayerData.GroundLayer, QueryTriggerInteraction.Ignore);
             return overlappedGroundColliders.Length > 0;
         }

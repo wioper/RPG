@@ -180,8 +180,13 @@ namespace GenShinImpactMovementSystem
         }
         
         
-        protected float GetMovementSpeed() {
-            return movementData.BaseSpeed * stateMachine.ReusableData.MovementSpeedModifier*stateMachine.ReusableData.MovementSlopesSpeedModifier;
+        protected float GetMovementSpeed(bool shouldConsiderSlopes=true) {
+            float movementSpeed = movementData.BaseSpeed * stateMachine.ReusableData.MovementSpeedModifier;
+
+            if (shouldConsiderSlopes) {
+                movementSpeed *= stateMachine.ReusableData.MovementSlopesSpeedModifier;
+            }
+            return movementSpeed;
         }
         protected Vector3 GetPlayerHorizontalVelocity() {
             Vector3 playerHorizontalVelocity = stateMachine.Player.Rigidbody.velocity;

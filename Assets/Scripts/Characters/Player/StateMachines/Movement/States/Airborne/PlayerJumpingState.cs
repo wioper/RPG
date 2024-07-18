@@ -80,6 +80,7 @@ namespace GenShinImpactMovementSystem
             Vector3 jumpDirection = stateMachine.Player.transform.forward;
 
             if (shouldKeepRotating) {
+                UpdateTargetRotation(GetMovementInputDirection());
                 jumpDirection = GetTargetRotationDirection(stateMachine.ReusableData.CurrentTargetRotation.y);
             }
             jumpForce.x *= jumpDirection.x;
