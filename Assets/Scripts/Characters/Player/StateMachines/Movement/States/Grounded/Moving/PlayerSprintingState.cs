@@ -21,9 +21,9 @@ namespace GenShinImpactMovementSystem
 
         #region IStates Methods
         public override void Enter() {
+            stateMachine.ReusableData.MovementSpeedModifier = sprintData.SpeedModifier;
             base.Enter();
 
-            stateMachine.ReusableData.MovementSpeedModifier = sprintData.SpeedModifier;
             stateMachine.ReusableData.CurrentJumpForce = airborneData.JumpData.StrongForce;
             shouldResetSprintState = true;
             startTime = Time.time;
@@ -99,6 +99,7 @@ namespace GenShinImpactMovementSystem
         
         protected override void OnMovementCanceled(InputAction.CallbackContext context) {
             stateMachine.ChangeState(stateMachine.HardStoppingState);
+            base.OnMovementCanceled(context);
         }
 
         protected override void OnJumpStarted(InputAction.CallbackContext context) {

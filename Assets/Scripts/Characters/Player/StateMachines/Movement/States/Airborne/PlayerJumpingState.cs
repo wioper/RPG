@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace GenShinImpactMovementSystem
 {
@@ -116,6 +117,13 @@ namespace GenShinImpactMovementSystem
         
 
         #endregion
-        
+
+        #region Inout Methods
+
+        protected override void OnMovementCanceled(InputAction.CallbackContext context) {
+            
+        }
+
+        #endregion
     }
 }

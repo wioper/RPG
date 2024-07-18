@@ -21,8 +21,13 @@ namespace GenShinImpactMovementSystem
             stateMachine = playerMovementStateMachine;
             movementData = stateMachine.Player.Data.GroundedData;
             airborneData = stateMachine.Player.Data.AirborneData;
+
+            SetBaseCameraRecenteringData();
+            
             InitializeData();
         }
+
+   
 
         private void InitializeData() {
             SetBaseRotationData();
@@ -90,6 +95,10 @@ namespace GenShinImpactMovementSystem
 
         #region Main Methods
 
+        protected void SetBaseCameraRecenteringData() {
+            stateMachine.ReusableData.BackwardsCameraRecenteringData = movementData.BackwardsCameraRecenteringData;
+            stateMachine.ReusableData.SidewaysCameraRecenteringData = movementData.SidewaysCameraRecenteringData;
+        }
         private void ReadMovementInput() {
             //从New Input System中读取Vector2数据 
             stateMachine.ReusableData.MovementInput = stateMachine.Player.Input.PlayerActions.Movement.ReadValue<Vector2>();
@@ -234,12 +243,20 @@ namespace GenShinImpactMovementSystem
         
         protected virtual void AddInputActionsCallbacks() {
             stateMachine.Player.Input.PlayerActions.WalkToggle.started += OnWalkToggleStarted;
+            stateMachine.Player.Input.PlayerActions.Look.started += OnMouseMovementStarted;
+            stateMachine.Player.Input.PlayerActions.Movement.performed += OnMovementPerformed;
+            stateMachine.Player.Input.PlayerActions.Movement.canceled += OnMovementCanceled;
         }
-
 
 
         protected virtual void RemoveInputActionsCallbacks() {
             stateMachine.Player.Input.PlayerActions.WalkToggle.started -= OnWalkToggleStarted;
+            stateMachine.Player.Input.PlayerActions.Look.started -= OnMouseMovementStarted;
+            stateMachine.Player.Input.PlayerActions.Movement.performed -= OnMovementPerformed;
+
+
+            stateMachine.Player.Input.PlayerActions.Movement.canceled -= OnMovementCanceled;
+
         }
 
         protected void DecelerateHorizontally() {
@@ -281,6 +298,63 @@ namespace GenShinImpactMovementSystem
             
         }
 
+        protected void UpdateCameraRecenteringState(Vector2 movementInput) {
+            if (movementInput==Vector2.zero) {
+                return;
+            }
+
+            if (movementInput==Vector2.up) {
+                DisableCameraRecentering();
+                return;
+            }
+
+            float cameraVerticalAngle = stateMachine.Player.MainCameraTransform.eulerAngles.x;
+
+            if (cameraVerticalAngle>=270f) {
+                cameraVerticalAngle -= 360f;
+            }
+            
+            cameraVerticalAngle= Mathf.Abs(cameraVerticalAngle);
+            
+            if (movementInput==Vector2.down) {
+                SetCameraRecenteringState(cameraVerticalAngle,stateMachine.ReusableData.BackwardsCameraRecenteringData);
+                return;
+            }
+            SetCameraRecenteringState(cameraVerticalAngle,stateMachine.ReusableData.SidewaysCameraRecenteringData);
+
+        }
+
+        protected void SetCameraRecenteringState(float cameraVerticalAngle, List<PlayerCameraRecenteringData> cameraRecenteringData) {
+            
+            foreach (PlayerCameraRecenteringData recenteringData in cameraRecenteringData) {
+                if (!recenteringData.IsWithRange(cameraVerticalAngle)) {
+                    continue;
+                }
+                EnableCameraRecentering(recenteringData.WaitTime,recenteringData.RecenteringTime);
+                return;
+            }
+                
+            DisableCameraRecentering();
+            
+        }
+
+        protected void EnableCameraRecentering(float waitTime = -1f, float recenteringTime = -1f) {
+
+            float movementSpeed = GetMovementSpeed();
+            if (movementSpeed==0f) {
+                movementSpeed = movementData.BaseSpeed;
+                
+            }
+
+            stateMachine.Player.CameraUtility.EnableRecentering(waitTime, recenteringTime, movementData.BaseSpeed,
+                movementSpeed);
+        }
+
+        protected void DisableCameraRecentering() {
+            stateMachine.Player.CameraUtility.DisableRecentering();
+        }
+        
+
         #endregion
 
         #region Input Methods
@@ -288,6 +362,20 @@ namespace GenShinImpactMovementSystem
         protected virtual void OnWalkToggleStarted(InputAction.CallbackContext context) {
             stateMachine.ReusableData.ShouldWalk = !stateMachine.ReusableData.ShouldWalk;
         }
+        protected virtual void OnMovementCanceled(InputAction.CallbackContext context) {
+            DisableCameraRecentering();
+        }
+        private void OnMouseMovementStarted(InputAction.CallbackContext context) {
+            UpdateCameraRecenteringState(stateMachine.ReusableData.MovementInput);
+            
+        }
+        private void OnMovementPerformed(InputAction.CallbackContext context) {
+            UpdateCameraRecenteringState(context.ReadValue<Vector2>());
+        }
+        
+        
+
+
 
         #endregion
 

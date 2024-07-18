@@ -14,8 +14,8 @@ namespace GenShinImpactMovementSystem
         #region Istate Rethods
 
         public override void Enter() {
-            base.Enter();
             stateMachine.ReusableData.MovementSpeedModifier = 0f;
+            base.Enter();
             stateMachine.Player.Input.PlayerActions.Movement.Disable();
             
             ResetVelocity();

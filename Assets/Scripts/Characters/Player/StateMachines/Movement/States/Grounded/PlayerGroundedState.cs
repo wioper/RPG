@@ -20,6 +20,8 @@ namespace GenShinImpactMovementSystem
             base.Enter();
             UpdateShouldSprintState();
 
+            UpdateCameraRecenteringState(stateMachine.ReusableData.MovementInput);
+
         }
 
         
@@ -76,7 +78,12 @@ namespace GenShinImpactMovementSystem
 
         private float SetSlopeSpeedModifierOnAngle(float angle) {
             float slopeSpeedModifier = movementData.SlopeSpeedAngles.Evaluate(angle);
-            stateMachine.ReusableData.MovementSlopesSpeedModifier = slopeSpeedModifier;
+
+            if (stateMachine.ReusableData.MovementSlopesSpeedModifier!=slopeSpeedModifier) {
+                stateMachine.ReusableData.MovementSlopesSpeedModifier = slopeSpeedModifier;
+                UpdateCameraRecenteringState(stateMachine.ReusableData.MovementInput);
+
+            }
             
             return slopeSpeedModifier;
         }
@@ -102,7 +109,6 @@ namespace GenShinImpactMovementSystem
         protected override void AddInputActionsCallbacks() {
             base.AddInputActionsCallbacks();
 
-            stateMachine.Player.Input.PlayerActions.Movement.canceled += OnMovementCanceled;
             stateMachine.Player.Input.PlayerActions.Dash.started += OnDashStarted;
             stateMachine.Player.Input.PlayerActions.Jump.started += OnJumpStarted;
         }
@@ -112,7 +118,6 @@ namespace GenShinImpactMovementSystem
 
         protected override void RemoveInputActionsCallbacks() {
             base.RemoveInputActionsCallbacks();
-            stateMachine.Player.Input.PlayerActions.Movement.canceled -= OnMovementCanceled;
             stateMachine.Player.Input.PlayerActions.Dash.started -= OnDashStarted;
             stateMachine.Player.Input.PlayerActions.Jump.started -= OnJumpStarted;
 
@@ -166,9 +171,7 @@ namespace GenShinImpactMovementSystem
         
         
         #region Input Methods
-        protected virtual void OnMovementCanceled(InputAction.CallbackContext context) {
-            stateMachine.ChangeState(stateMachine.IdlingState);
-        }
+
         protected virtual void OnDashStarted(InputAction.CallbackContext context) {
             stateMachine.ChangeState(stateMachine.DashingState);
         }

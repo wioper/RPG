@@ -19,8 +19,8 @@ namespace GenShinImpactMovementSystem
         #region IStates
 
         public override void Enter() {
-            base.Enter();
             stateMachine.ReusableData.MovementSpeedModifier = movementData.RunData.speedModifier;
+            base.Enter();
             stateMachine.ReusableData.CurrentJumpForce = airborneData.JumpData.MediumForce;
 
         }
@@ -61,6 +61,8 @@ namespace GenShinImpactMovementSystem
 
         protected override void OnMovementCanceled(InputAction.CallbackContext context) {
             stateMachine.ChangeState(stateMachine.MediumStoppingState);
+            base.OnMovementCanceled(context);
+
         }
         
         protected override void OnWalkToggleStarted(InputAction.CallbackContext context) {
