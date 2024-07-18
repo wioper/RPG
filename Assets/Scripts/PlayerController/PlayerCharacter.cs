@@ -20,17 +20,15 @@ public class PlayerCharacter : MonoBehaviour
 
     private void Update() {
         UpdateMovementInput();
-        UpdateRotationInput();
     }
 
-    private void UpdateRotationInput() {
-        Quaternion rot = Quaternion.Euler(0, _photographer.Yaw, 0);
-        _playerMovementController.SetRotationInput(rot);
-    }
+
 
     private void UpdateMovementInput() {
         Quaternion rot = Quaternion.Euler(0, _photographer.Yaw, 0);
         _playerMovementController.SetMovementInput(rot * Vector3.forward * Input.GetAxis("Vertical") +
                                                    rot * Vector3.right * Input.GetAxis("Horizontal"));
+        _playerMovementController.SetRotationInput(rot);
+
     }
 }

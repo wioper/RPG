@@ -7,6 +7,7 @@ using UnityEngine;
 public class PlayerMovementController : MonoBehaviour
 {
     private Rigidbody _rigidbody;
+    private CharacterController _characterController;
     private Animator _animator;
     public Vector3 CurrentInput { get; private set; }
     public float MaxWalkSpeed;
@@ -15,6 +16,7 @@ public class PlayerMovementController : MonoBehaviour
     private void Awake() {
         _rigidbody = GetComponent<Rigidbody>();
         _animator = GetComponentInChildren<Animator>();
+        _characterController = GetComponent<CharacterController>();
     }
 
     private void FixedUpdate() {
@@ -33,7 +35,7 @@ public class PlayerMovementController : MonoBehaviour
         CurrentInput = Vector3.ClampMagnitude(input, 1);
     }
     
-    public void SetRotationInput(Quaternion input) {
+    public void SetRotationInput(Quaternion input) { 
         _rigidbody.MoveRotation(input);
     }
 
