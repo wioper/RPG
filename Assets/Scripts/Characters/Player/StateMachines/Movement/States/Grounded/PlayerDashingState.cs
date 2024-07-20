@@ -24,6 +24,8 @@ namespace GenShinImpactMovementSystem
         public override void Enter() {
             stateMachine.ReusableData.MovementSpeedModifier = dashData.SpeedModifier;
             base.Enter();
+            
+            StartAnimation(stateMachine.Player.AnimationData.DashParameterHash);
             stateMachine.ReusableData.CurrentJumpForce = airborneData.JumpData.StrongForce;
 
 
@@ -40,6 +42,8 @@ namespace GenShinImpactMovementSystem
 
         public override void Exit() {
             base.Exit();
+            StopAnimation(stateMachine.Player.AnimationData.DashParameterHash);
+
             SetBaseRotationData();
         }
 

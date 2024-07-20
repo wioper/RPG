@@ -21,6 +21,8 @@ namespace GenShinImpactMovementSystem
         public override void Enter() {
             stateMachine.ReusableData.MovementSpeedModifier = movementData.RunData.speedModifier;
             base.Enter();
+            StartAnimation(stateMachine.Player.AnimationData.RunParameterHash);
+
             stateMachine.ReusableData.CurrentJumpForce = airborneData.JumpData.MediumForce;
 
         }
@@ -38,7 +40,11 @@ namespace GenShinImpactMovementSystem
             StopRunning();
         }
 
- 
+        public override void Exit() {
+            base.Exit();
+            StopAnimation(stateMachine.Player.AnimationData.RunParameterHash);
+
+        }
 
         #endregion
 

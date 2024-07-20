@@ -18,12 +18,16 @@ namespace GenShinImpactMovementSystem
             stateMachine.ReusableData.BackwardsCameraRecenteringData = walkData.BackwardsCameraRecenteringData;
             
             base.Enter();
+            StartAnimation(stateMachine.Player.AnimationData.WalkParameterHash);
+
             stateMachine.ReusableData.CurrentJumpForce = airborneData.JumpData.WeakForce;
 
         }
 
         public override void Exit() {
             base.Exit();
+            StopAnimation(stateMachine.Player.AnimationData.WalkParameterHash);
+
             stateMachine.ReusableData.ShouldWalk = false;
             SetBaseCameraRecenteringData();
         }

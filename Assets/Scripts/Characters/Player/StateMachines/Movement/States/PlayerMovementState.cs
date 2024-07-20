@@ -38,7 +38,6 @@ namespace GenShinImpactMovementSystem
         #region IState Methods
         public virtual void Enter() {
             Debug.Log("State: "+GetType().Name);
-
             AddInputActionsCallbacks();
         }
 
@@ -46,6 +45,7 @@ namespace GenShinImpactMovementSystem
 
         public virtual void Exit() {
             RemoveInputActionsCallbacks();
+
         }
 
         
@@ -167,7 +167,13 @@ namespace GenShinImpactMovementSystem
 
         #region Reusable Methods
 
-        
+        protected void StartAnimation(int animationHash) {
+            stateMachine.Player.Animator.SetBool(animationHash,true);
+        }
+
+        protected void StopAnimation(int animationHash) {
+            stateMachine.Player.Animator.SetBool(animationHash, false);
+        }
                 
 
         protected virtual void SetBaseRotationData() {

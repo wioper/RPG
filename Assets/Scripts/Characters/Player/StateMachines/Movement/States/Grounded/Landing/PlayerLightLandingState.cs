@@ -15,6 +15,7 @@ namespace GenShinImpactMovementSystem
             stateMachine.ReusableData.MovementSpeedModifier = 0f;
             base.Enter();
 
+
             stateMachine.ReusableData.CurrentJumpForce = airborneData.JumpData.StationaryForce;
             
             ResetVelocity();
@@ -24,12 +25,19 @@ namespace GenShinImpactMovementSystem
 
         public override void Update() {
             base.Update();
+            StartAnimation(stateMachine.Player.AnimationData.LandingParameterHash);
             if (stateMachine.ReusableData.MovementInput==Vector2.zero) {
                 return;
             }
             OnMove();
         }
-        
+
+        public override void Exit() {
+            base.Exit();
+            StopAnimation(stateMachine.Player.AnimationData.LandingParameterHash);
+
+        }
+
         public override void PhysicsUpdate() {
             base.PhysicsUpdate();
 
